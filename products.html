@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Top Nav</title>
+        <link rel="stylesheet" href="{% static 'store/css/style1.css' %}"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <div class="ecommerce-container">
+            <div class="header-top">
+                <div class="head-container">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="head-left">
+                                <p>Free shipping, 30-day return or refund guarantee.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                           
+                        </div>
+                        <div class="col-lg-4 ">
+                            <div class="header__top__right">
+                                <div class="header__top__links">
+                                    {% if username %}
+                                    <a href="">{{ username }}</a>
+                                    <a href="{% url 'store:log_out' %}">Log out</a>
+                                    {% else %}
+                                    <a href="{% url 'store:login_view' %}">SIGN IN</a>
+                                    <a href="{% url 'store:register' %}">SIGN UP</a>
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-panel" id="cart-block">
+                <i class="fa fa-close close-btn" id="cart-close"></i>
+                <div class="cart-table-head">
+                    <ul>
+                        <li>Product</li>
+                        <li>Quantity</li>
+                        <li>Subtotal</li>
+                    </ul>
+                </div>
+                <div class="cart-items" id="cart-items-block">
+                    
+                </div>
+                
+                <div class="checkout-bar">
+
+                </div>
+                <div class="checkout-block">
+                        <p>Subtotal &#8377;<span class="subtotal amount">800</span></p>
+                        <p>Tax &#8377;<span class="tax amount">0</span></p>
+                        <p>Total &#8377;<span class="total amount">800</span></p>
+                        <button type="button" onclick="checkout();" class="checkout-btn">Checkout</button>
+                </div>
+
+            </div>
+
+
+            <div class="featuer-container">
+                <div class="nav">
+                    <div class="left-nav">
+                        <ul>
+                            <li class="logo">Fashion World<img src="{% static 'store/media/dance.png' %}"/></li>
+                            <li><a class="active-border" href="#">Home</a></li>
+                            <li class="dropdown"><a href="#">Shop</a>
+                            <ul class="dropdown-content">
+                                <li><a href="#">Mens</a></li>
+                                <li><a href="#">Womens</a></li>
+                                <li><a href="{% url 'store:products' %}">Products</a></li>
+                                <li><a href="#">Category</a></li>
+                            </ul>
+                            </li>
+                            <li class="dropdown"><a href>Pages</a>
+                            <ul class="dropdown-content">
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Shop details</a></li>
+                                <li><a href="#">Shopping cart</a></li>
+                                <li><a href="#">Checkout</a></li>
+                                <li><a href="#">Blog details</a></li>
+                            </ul>
+                            </li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="right-nav">
+                        <ul>
+                            <li><i class="fa fa-search"></i></li>
+                            <li><i class="fa fa-heart"></i></li>
+                            <li><i class="fa fa-shopping-bag " id="shop-bag"></i></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            <div class="shop-products-container">
+                <div class="category-container">
+                    <div class="select-category">
+                        <h4 class="category-title">categories</h4><i data-cat="category" class="fa fa-angle-right down-angle"></i>
+                        <ul class="dropdown-category category" >
+
+                            <li>Men(10)</li>
+                            <li>women(15)</li>
+                            <li>Clothing(20)</li>
+                            <li>shoes(30)</li>
+                            <li>Accesories(25)</li>
+                        </ul>
+                        
+                    </div>
+                    <hr>
+                    <div class="select-brand">
+                        <h4 class="category-title">Branding</h4><i data-cat="brand" class="fa fa-angle-right down-angle"></i>
+                        <ul class="dropdown-category brand">
+                            <li>Louis Vuitton</li>
+                            <li>Chanel</li>
+                            <li>Hermes</li>
+                            <li>Gucci</li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="filter">
+                        <h4 class="category-title">filter price</h4><i data-cat="price-cat" class="fa fa-angle-right down-angle"></i>
+                        <ul class="dropdown-category price-cat">
+                            <li>&#8377;0.00-&#8377;50.00</li>
+                            <li>&#8377;50.00-&#8377;100.00</li>
+                            <li>&#8377;100.00-&#8377;200.00</li>
+                            <li>&#8377;200.00-&#8377;300.00</li>
+                            <li>&#8377;300.00-&#8377;500.00</li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="sizes">
+                        <h4 class="category-title">size</h4><i data-cat="size-cat" class="fa fa-angle-right down-angle"></i>
+                        <ul class="dropdown-category size-dropdown size-cat">
+                            <li>xs</li>
+                            <li>s</li>
+                            <li>m</li>
+                            <li>l</li>
+                            <li>xl</li>
+                            <li>2xl</li>
+                            <li>3xl</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="shop-products">
+                    <div class="shop-product">
+                        {% for product in products %}
+                        <div class="product" data-id="{{ product.product_id }}">
+                            <div class="product-image">
+                                <img src="/media/{{ product.product_image }}"/>
+                            </div>
+                            <div class="product_desc">
+                                <div><h5 class="product-title">{{ product.product_name }}</h5><span class="price">&#8377;<span class="amount">{{ product.product_price }}</span></span></div>
+                                
+                                <span><button class="btn-cart" data-id="{{ product.product_id }}">Add</button></span> 
+                                {% if product.product_stock <= 5 %}
+                                <span class="stock-notify">only {{ product.product_stock }} left</span>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="pagination">
+                        <a  href="#">&laquo;</a>
+                        {% for page in pages %}
+                        <a href="#">{{ page }}</a>
+                        {% endfor %}
+                        <a href="#">&raquo;</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="footer-container">
+                <footer>
+                    <div class="footer-container">
+                      <!-- Company Info Section -->
+                      <div class="footer-section">
+                        <div class="footer-head">
+                            <h2>Fashion World<img src="{% static 'store/media/dance.png' %}"/></h2>
+                        </div>
+                        <h4>About Us</h4>
+                        <p>We are an e-commerce store offering a wide range of products to suit all your needs. Fast shipping and secure payments.</p>
+                      </div>
+                  
+                      <!-- Quick Links Section -->
+                      <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                          <li><a href="/home">Home</a></li>
+                          <li><a href="/shop">Shop</a></li>
+                          <li><a href="/about">About Us</a></li>
+                          <li><a href="/contact">Contact</a></li>
+                          <li><a href="/terms">Terms & Conditions</a></li>
+                          <li><a href="/privacy">Privacy Policy</a></li>
+                        </ul>
+                      </div>
+                  
+                      <!-- Contact Info Section -->
+                      <div class="footer-section">
+                        <h4>Contact Us</h4>
+                        <p>Phone: +1 (234) 567-890</p>
+                        <p>Email: <a href="mailto:info@example.com">info@example.com</a></p>
+                        <p>Address: 123 E-commerce St, City, Country</p>
+                      </div>
+                  
+                      <!-- Newsletter Signup Section -->
+                      <div class="footer-section">
+                        <h4>Stay Updated</h4>
+                        <p>Sign up for our newsletter and receive exclusive offers and updates!</p>
+                        <form action="/subscribe" method="POST">
+                          <input type="email" name="email" placeholder="Enter your email" required>
+                          <button type="submit">Subscribe</button>
+                        </form>
+                      </div>
+                  
+                      <!-- Social Media Section -->
+                      <div class="footer-section">
+                        <h4>Follow Us</h4>
+                        <div class="social-media-links">
+                          <a href="https://facebook.com">Facebook<i class="fa fa-facebook-square"></i></a>
+                          <a href="https://twitter.com" >Twitter<i class="fa fa-twitter"></i></a>
+                          <a href="https://instagram.com">Instagram<i class="fa fa-instagram"></i></a>
+                          <a href="https://linkedin.com">LinkedIn<i class="fa fa-linkedin"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                  
+                    <!-- Footer Bottom -->
+                    <div class="footer-bottom">
+                      <p>&copy; 2025 Your Company Name. All rights reserved.</p>
+                    </div>
+                  </footer>
+            </div>
+        </div> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            $('.owl-carousel').owlCarousel({
+                loop:true,
+                margin:10,
+                autoplay:true,
+                autoplayTimeout:1500,
+                nav:false,
+                dots:false,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items:3
+                    },
+                    1000:{
+                        items:1
+                    }
+                }
+            })
+        </script>
+        <script src="{% static 'store/js/basic.js' %}"></script>
+        <script src="{% static 'store/js/cart.js' %}"></script>
+    </body>
+</html>
