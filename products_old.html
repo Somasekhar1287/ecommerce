@@ -1,0 +1,350 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My store</title>
+        <link rel="stylesheet" href="{% static 'store/css/style.css' %}" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="{% static 'store/js/jquery.min.js' %}"></script>
+    </head>
+    <body>
+        <!--<img src="web_temp.jpg" />-->
+        <div class="container">
+            <div class="nav">
+                <div class="logo flex-item">
+                    <h4>eCommerce</h4>
+                </div>
+                <div class="main-nav flex-item">
+                    <ul>
+                        <li><a href="{% url 'store:index' %}">Home</a></li>
+                        <li><a href="{% url 'store:products' %}">Products</a></li>
+                        <li><a href="#">Store</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="icon-nav flex-item">
+                    <ul>
+                       
+                        <li><i class="fa fa-search icon"></i></li>
+                        <li><i class="fa fa-shopping-bag icon " id="shop-bag"></i><span id="item-badge" class="badge "></span></li>
+                        {% if is_logged %}
+                        <li>{{ username }}</li>
+                        <li><a href="{% url 'store:log_out' %}"><i class="fa fa-sign-out icon"></i></a></li>
+                        {% else %}
+                        <li><a data-id="" href="{% url 'store:login_view' %}"><i class="fa fa-user icon"></i></a></li>
+                        {% endif %}
+                    </ul>
+                    
+                </div>
+            </div>
+            <div class="cart-panel" id="cart-block">
+                <i class="fa fa-close close-btn" id="cart-close"></i>
+                <div class="cart-table-head">
+                    <ul>
+                        <li>Product</li>
+                        <li>Quantity</li>
+                        <li>Subtotal</li>
+                    </ul>
+                </div>
+                <div class="cart-items" id="cart-items-block">
+                    
+                </div>
+                
+                <div class="checkout-bar">
+
+                </div>
+                <div class="checkout-block">
+                        <p>Subtotal &#8377;<span class="subtotal amount">800</span></p>
+                        <p>Tax &#8377;<span class="tax amount">0</span></p>
+                        <p>Total &#8377;<span class="total amount">800</span></p>
+                        <button type="button" onclick="checkout();" class="checkout-btn">Checkout</button>
+                </div>
+
+            </div>
+
+            <div class="main-container">
+                <div class="categories">
+                    <ul>
+                        <li class="cat-active">All</li>
+                        <li>Shirts</li>
+                        <li>shoes</li>
+                        <li>bags</li>
+                    </ul>
+                </div>
+                
+                <div class="new-products">
+                    <div class="product-title">
+                        <h1>products</h1>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+                    </div>
+                    
+                        
+                   
+                    <div class="products">
+                        {% for product in products %}
+                        <div class="product-card">
+                            <div class="product-image ">
+                                <img src="/media/{{ product.product_image }}" />
+                                <h5 class="new-tag">New</h5>
+                            </div>
+                            <div class="product-details">
+                                <h2>{{ product.product_name }}</h2>
+                                <h4 class="product-price">&#8377;{{ product.product_price }}</h4>
+                                <p class="product-like">50<i class="fa fa-heart like-icon"></i></p>
+                                <p class="product-desc">Lorem Ipsum is simply dummy text of the printing</p>
+                                <div class="addcart" id="item-1">
+                                    <button type="button" data-id="{{ product.product_id }}" class="cart-btn {{ product.product_id }}">add to cart</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        {% endfor %}
+                        
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>
+
+            
+            <div class="related-products">
+
+            </div>
+        </div>
+        
+        <script>
+            var cart_products={};
+            $(document).ready(function(){
+                
+                console.log(cart_products);
+                function updateCartNumber(){
+                    var cart_items=document.getElementsByClassName("cart-item");
+                    console.log(cart_items.length);
+                    if(cart_items.length>0){
+                        
+                        document.getElementById("item-badge").classList.add("badge-items");
+                        document.getElementsByClassName("badge")[0].innerHTML=cart_items.length;
+                    }else{
+                        
+                        document.getElementById("item-badge").classList.remove("badge-items");
+                    }
+                }
+                updateCartNumber();
+
+                if(localStorage.getItem("items")){
+                console.log(localStorage.getItem("items"));
+                console.log(typeof localStorage.getItem("items"));
+                var cart_items_obj=JSON.parse(localStorage.getItem("items"));
+                var lproduct_name="";
+                var lproduct_image="";
+                var lproduct_quantity="";
+                var lproduct_price="";
+                var subtotal=0;
+
+                for(var product_keys of Object.keys(cart_items_obj)){
+                    for(var item_keys of Object.keys(cart_items_obj[product_keys])){
+                        console.log(item_keys);
+                        if(item_keys==="product_name"){
+                            lproduct_name=cart_items_obj[product_keys][item_keys];
+                        }
+                        if(item_keys==="product_image"){
+                            lproduct_image=cart_items_obj[product_keys][item_keys];
+                        }
+                        if(item_keys==="product_price"){
+                            lproduct_price=cart_items_obj[product_keys][item_keys];
+                        }
+                        if(item_keys==="product_quantity"){
+                            lproduct_quantity=cart_items_obj[product_keys][item_keys];
+                        }
+                        console.log(cart_items_obj[product_keys][item_keys]);
+                        subtotal=parseFloat(product_price)*parseInt(product_quantity);
+
+                        
+
+                    }
+                    $("#cart-items-block").append(`<div class="cart-item">
+                                        <div class="item">
+                                            <img class="item-image" src="/media/`+lproduct_image+`" />
+                                            <div class="item_details">
+                                                <h4 class="item_name">`+lproduct_name+`</h4>
+                                                <p>Price: &#8377;<span class="item_price"> `+lproduct_price+`</span></p>
+                                            </div>
+                                            <div class="item_quantity">
+                                                <input type="number" data-id=`+lproduct_id+` id="qty" class="qty" value="1" />
+                                            </div>
+                                            <div class="item_subtotal">
+                                                <p>&#8377; <span class="subtot">`+lproduct_price+`</span><span class="delete"><i class="fa fa-trash"></i></span></p>
+                                            </div>
+                                        </div>
+                                    </div>`);
+                }
+
+                
+                
+
+            }
+
+
+
+
+                
+                $(".cart-btn").on("click",function(){
+                    document.getElementById("cart-block").style.width="25%";
+                    document.getElementsByClassName("main-container")[0].style.width="70%";
+                    var product_id=$(this).attr("data-id");
+                    
+                    $.ajax({
+                        type:"POST",
+                        url:"get_product",
+                        dataType:"html",
+
+                        data:{"product_id":product_id,'csrfmiddlewaretoken': '{{ csrf_token }}',},
+                        success:function(response){
+                            
+                            
+							console.log(typeof(response));
+                            var product_object=JSON.parse(response);
+                            console.log(product_object);
+                            console.log(typeof(product_object));
+                           
+                            var product_array=Object.values(product_object);
+                            console.log(product_array);
+                            console.log(typeof(product_array));
+                            
+                            
+                            var product_name=product_array[0][0];
+                            var product_image=product_array[0][1];
+                            var product_price=product_array[0][2];
+                            
+                            console.log(product_array[0][0]);
+                            cart_products[product_id]={
+                                    "product_name":product_name,
+                                    "product_image":product_image,
+                                    "product_price":product_price,
+                                    "product_quantity":1,
+                                };
+                            
+                            //var local_cart_items=localStorage.getItem("items");
+                            console.log(cart_products);
+                           
+                            $("#cart-items-block").append(`<div class="cart-item">
+                                        <div class="item">
+                                            <img class="item-image" src="/media/`+product_image+`" />
+                                            <div class="item_details">
+                                                <h4 class="item_name">`+product_name+`</h4>
+                                                <p>Price: &#8377;<span class="item_price"> `+product_price+`</span></p>
+                                            </div>
+                                            <div class="item_quantity">
+                                                <input type="number" data-id=`+product_id+` id="qty" class="qty" value="1" />
+                                            </div>
+                                            <div class="item_subtotal">
+                                                <p>&#8377; <span class="subtot">`+product_price+`</span><span class="delete"><i class="fa fa-trash"></i></span></p>
+                                            </div>
+                                        </div>
+                                    </div>`);
+                                    updateTotalAmount();
+                                    updateCartNumber();
+									
+                        },
+                        error:function(data){
+                            console.log(data);
+                        },
+
+                    });
+                });
+            });
+
+
+           
+
+
+
+           
+
+            var cart_amount={}; 
+            
+            document.addEventListener("change", function(e){
+            const target = e.target.closest("#qty"); // Or any other selector.
+            
+            
+            if(target){
+                var qty=target.value;
+                var prod_id=target.getAttribute("data-id");
+                console.log(prod_id);
+                cart_products[prod_id]["product_quantity"]=qty;
+                console.log(cart_products);
+                var amount=target.parentElement.parentElement.children[1].children[1].children[0].innerHTML;
+                console.log(target.parentElement.parentElement.children[1].children[1].children[0].innerHTML);
+                target.parentElement.nextElementSibling.children[0].children[0].innerHTML=parseFloat(amount)*parseInt(qty);
+                updateTotalAmount();
+                    //target.parentElement.nextElementSibling.children[0].children[0].innerHTML);
+            }
+        });
+
+
+
+  function updateTotalAmount(){
+    var total=0;
+    var sub_totals=document.getElementsByClassName("subtot");
+    for(var i=0;i<sub_totals.length;i++){
+       total+=parseFloat(sub_totals[i].innerHTML);
+    }
+    document.getElementsByClassName("subtotal")[0].innerHTML=total;
+    var tax=document.getElementsByClassName("tax")[0].innerHTML;
+    document.getElementsByClassName("total")[0].innerHTML=total+tax;
+    cart_amount["tax"]=tax;
+    cart_amount["sub_total"]=total;
+    console.log(cart_amount);
+  }
+
+
+
+
+  function checkout(){
+
+        if(localStorage.getItem("items") === null){
+                        
+            localStorage.setItem("items",JSON.stringify(cart_products));
+
+        }else{
+            
+            localStorage.setItem("items",JSON.stringify(cart_products));
+        }
+        if(localStorage.getItem("cart_amount") === null){
+                        
+            localStorage.setItem("cart_amount",JSON.stringify(cart_amount));
+
+        }else{
+            
+            localStorage.setItem("cart_amount",JSON.stringify(cart_amount));
+        }
+
+
+        $.ajax({
+                        type:"POST",
+                        url:"add_cart",
+                        dataType:"html",
+
+                        data:{"cart_products":JSON.stringify(cart_products),'csrfmiddlewaretoken': '{{ csrf_token }}',},
+                        success:function(response){
+                            
+                            console.log(response);
+                            location.href="{% url 'store:checkout' %}";
+							
+									
+                        },
+                        error:function(data){
+                            console.log(data);
+                        },
+
+                    });
+
+        
+    }
+
+        </script>
+        <script src="{% static 'store/js/cart.js' %}"></script>
+    </body>
+</html>
